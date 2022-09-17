@@ -16,7 +16,7 @@ on:
         required: true
         type: string
     secrets:
-      my_deploy_file:
+      my_deploy_key:
         required: true
   push:
     branches:
@@ -99,7 +99,7 @@ jobs:
         with:
           name: dist
           path: dist
-          MY_DEPLOY_FILE: ${{ secrets.my_deploy_file }}
+          MY_DEPLOY_KEY: ${{ secrets.my_deploy_key }}
           ssh_path: ${{ github.events.inputs.ssh_path }}
           user_email: ${{ github.events.inputs.user_email }}
 
@@ -108,11 +108,11 @@ jobs:
           set -x    
           mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
           echo "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
-          echo "$MY_DEPLOY_FILE" >> my_deploy_file
-          cat my_deploy_file     
+          echo "$MY_DEPLOY_KEY" >> my_deploy_key
+          cat my_deploy_key     
           ls
-          chmod 600 my_deploy_file
-          mv my_deploy_file ~/.ssh/id_rsa
+          chmod 600 my_deploy_key
+          mv my_deploy_key ~/.ssh/id_rsa
           mv dist/ssh_config ~/.ssh/config
         shell: bash
       
