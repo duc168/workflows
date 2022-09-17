@@ -31,8 +31,11 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      testthisthing: ${{inputs.user_email}}-test-max
-      secretchecking: ${{secrets.my_deploy_key}}-test-max
+      os: ${{inputs.os}}
+      node: ${{inputs.node}}
+      ssh_path: ${{inputs.ssh_path}}
+      user_email: ${{inputs.user_email}}
+      my_deploy_key: ${{secrets.my_deploy_key}}
 
     # strategy:
     #   matrix:
@@ -44,8 +47,11 @@ jobs:
         run: |
           set -x
           echo "test input"
-          echo $testthisthing
-          echo $secretchecking
+          echo $os
+          echo $node
+          echo $ssh_path
+          echo $user_email
+          echo $my_deploy_key
         
       - name: Checkout 🛎
         uses: actions/checkout@master
