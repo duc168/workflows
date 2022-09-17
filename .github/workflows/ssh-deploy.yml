@@ -39,8 +39,8 @@ jobs:
 
     strategy:
       matrix:
-        os: ${{ env.os }}
-        node: ${{ env.node }}
+        os: ${{inputs.os}}
+        node: ${{inputs.node}}
 
     steps:
       # - name: Test input
@@ -117,8 +117,8 @@ jobs:
 
     strategy:
       matrix:
-        os: ${{ env.os }}
-        node: ${{ env.node }}
+        os: ${{inputs.os}}
+        node: ${{inputs.node}}
 
     steps:
       - name: Download dist
