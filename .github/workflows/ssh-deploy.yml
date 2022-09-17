@@ -31,8 +31,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [${{ inputs.os }}]
-        node: [${{ inputs.node }}]
+        os: [${{ github.events.inputs.os }}]
+        node: [${{ github.events.inputs.node }}]
 
     steps:
       - name: Checkout 🛎
@@ -90,8 +90,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [${{ inputs.os }}]
-        node: [${{ inputs.node }}]
+        os: [${{ github.events.inputs.os }}]
+        node: [${{ github.events.inputs.node }}]
 
     steps:
       - name: Download dist
@@ -100,8 +100,8 @@ jobs:
           name: dist
           path: dist
           MY_DEPLOY_FILE: ${{ secrets.my_deploy_file }}
-          ssh_path: ${{ inputs.ssh_path }}
-          user_email: ${{ inputs.user_email }}
+          ssh_path: ${{ github.events.inputs.ssh_path }}
+          user_email: ${{ github.events.inputs.user_email }}
 
       - name: set up
         run: |
