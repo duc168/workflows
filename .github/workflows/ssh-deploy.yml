@@ -30,6 +30,10 @@ jobs:
     if: github.repository != 'duc168/workflows'
     runs-on: ubuntu-latest
 
+    env:
+      testthisthing: ${{inputs.user_email}}-test-max
+      secretchecking: ${{secrets.my_deploy_key}}-test-max
+
     # strategy:
     #   matrix:
     #     os: [${{ github.events.inputs.os }}]
@@ -37,9 +41,6 @@ jobs:
 
     steps:
       - name: Test input
-        with:
-          testthisthing: ${{inputs.user_email}}-test-max
-          secretchecking: ${{secrets.my_deploy_key}}-test-max
         run: |
           set -x
           echo "test input"
