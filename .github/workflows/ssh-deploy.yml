@@ -27,6 +27,7 @@ on:
 
 jobs:
   testing:    
+    if: github.repository != 'duc168/workflows'
     runs-on: ubuntu-latest
 
     # strategy:
@@ -84,6 +85,7 @@ jobs:
           path: dist
       
   deployment:
+    if: github.repository != 'duc168/workflows'
     needs: testing
     runs-on: ubuntu-latest
     # if: "contains(github.event.head_commit.message, 'deploy')"
