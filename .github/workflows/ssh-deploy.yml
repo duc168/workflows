@@ -27,7 +27,7 @@ on:
 
 jobs:
   testing:    
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ inputs.os }}
 
     # strategy:
     #   matrix:
@@ -85,7 +85,7 @@ jobs:
       
   deployment:
     needs: testing
-    runs-on: ${{ matrix.os }}
+    runs-on: ${{ inputs.os }}
     # if: "contains(github.event.head_commit.message, 'deploy')"
 
     # strategy:
