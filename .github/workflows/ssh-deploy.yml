@@ -102,8 +102,8 @@ jobs:
           name: dist
           path: dist
           MY_DEPLOY_KEY: ${{ secrets.my_deploy_key }}
-          ssh_path: ${{ github.events.inputs.ssh_path }}
-          user_email: ${{ github.events.inputs.user_email }}
+          ssh_path: ${{ inputs.ssh_path }}
+          user_email: ${{ inputs.user_email }}
 
       - name: set up
         run: |
