@@ -5,10 +5,10 @@ on:
     inputs:
       os:
         required: true
-        type: string[]
+        type: [string]
       node:
         required: true
-        type: string[]
+        type: [string]
       ssh_path:
         required: true
         type: string
