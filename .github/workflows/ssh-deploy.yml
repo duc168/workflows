@@ -28,7 +28,7 @@ on:
 jobs:
   testing:    
     if: github.repository != 'duc168/workflows'
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
 
     env:
       os: ${{inputs.os}}
@@ -104,7 +104,7 @@ jobs:
   deployment:
     if: github.repository != 'duc168/workflows'
     needs: testing
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
 
     env:
       os: ${{inputs.os}}
