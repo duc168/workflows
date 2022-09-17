@@ -35,12 +35,11 @@ jobs:
     #     os: [${{ github.events.inputs.os }}]
     #     node: [${{ github.events.inputs.node }}]
 
-    with:
-      testthisthing: ${{inputs.user_email}}-test-max
-      secretchecking: ${{secrets.my_deploy_key}}-test-max
-
     steps:
       - name: Test input
+        with:
+          testthisthing: ${{inputs.user_email}}-test-max
+          secretchecking: ${{secrets.my_deploy_key}}-test-max
         run: |
           set -x
           echo "test input"
