@@ -3,8 +3,17 @@ name: Test & Deploy
 on:
   workflow_call:
     inputs:
-      anythingHereWillBePassedToReusableJob:
-        required: false
+      os:
+        required: true
+        type: string
+      node:
+        required: true
+        type: string
+      ssh_path:
+        required: true
+        type: string
+      user_email:
+        required: true
         type: string
     secrets:
       my_deploy_file:
@@ -20,10 +29,10 @@ jobs:
   testing:    
     runs-on: ${{ matrix.os }}
 
-    # strategy:
-    #   matrix:
-    #     os: [ubuntu-latest]
-    #     node: [${{ github.event.inputs.nodeVersion }}]
+    strategy:
+      matrix:
+        os: [${{ inputs.os }}]
+        node: [${{ inputs.node }}]
 
     steps:
       - name: Checkout 🛎
@@ -79,10 +88,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     # if: "contains(github.event.head_commit.message, 'deploy')"
 
-    # strategy:
-    #   matrix:
-    #     os: [ubuntu-latest]
-    #     node: [14.17.2]
+    strategy:
+      matrix:
+        os: [${{ inputs.os }}]
+        node: [${{ inputs.node }}]
 
     steps:
       - name: Download dist
@@ -90,6 +99,9 @@ jobs:
         with:
           name: dist
           path: dist
+          MY_DEPLOY_FILE: ${{ secrets.my_deploy_file }}
+          ssh_path: ${{ inputs.ssh_path }}
+          user_email: ${{ inputs.user_email }}
 
       - name: set up
         run: |
@@ -103,16 +115,15 @@ jobs:
           mv my_deploy_file ~/.ssh/id_rsa
           mv dist/ssh_config ~/.ssh/config
         shell: bash
-        env:
-          MY_DEPLOY_FILE : ${{secrets.PRIVATE_DEPLOY_KEY}}
+      
       - name: deploy
         run: |
           set -x    
           cd dist
           git init
-          git remote add deploy "git@github.com:duc168/wordle.git"
+          git remote add deploy "$ssh_path"
           git config user.name "Github Workflow Action"
-          git config user.email "victor.tran.august@gmail.com"
+          git config user.email "$user_email"
           git checkout -b production
           git add .
           git commit -m "Deploy"          
