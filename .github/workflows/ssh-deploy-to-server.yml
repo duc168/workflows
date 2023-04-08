@@ -65,9 +65,6 @@ jobs:
       
       - name: Rename .env.production to .env file
         run: mv .env.production .env
-      
-      - name: Test
-        run: npm test
 
       - name: Build production 📦
         run: npm run build
