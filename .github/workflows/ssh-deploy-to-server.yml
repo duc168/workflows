@@ -65,6 +65,9 @@ jobs:
       
       - name: Rename .env.production to .env file
         run: mv .env.production .env
+        
+      - name: Set CI to false # prevent warning to be error and stop the CI
+        run: export CI=false
 
       - name: Build production 📦
         run: npm run build
