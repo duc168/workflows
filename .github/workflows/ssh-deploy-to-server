@@ -1,0 +1,96 @@
+name: Deploy
+
+on:
+  workflow_call:
+    inputs:
+      os:
+        required: true
+        type: string
+      node:
+        required: true
+        type: string
+      ssh_host:
+        required: true
+        type: string
+      ssh_user:
+        required: true
+        type: string
+      target_dir:
+        required: true
+        type: string
+    secrets:
+      my_deploy_key:
+        required: true
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  deploy:    
+    if: github.repository != 'duc168/workflows'
+    runs-on: ubuntu-latest
+
+    env:
+      os: ${{inputs.os}}
+      node: ${{inputs.node}}
+      ssh_host: ${{inputs.ssh_host}}
+      ssh_user: ${{inputs.ssh_user}}
+      target_dir: ${{inputs.target_dir}}
+
+    steps:
+        
+      - name: Checkout 🛎
+        uses: actions/checkout@v2
+      
+      - name: Setup node env 🏗
+        uses: actions/setup-node@v2.1.5
+        with:
+          node-version: ${{ env.node }}
+          check-latest: true
+
+      - name: Cache node_modules 📦
+        uses: actions/cache@v2.1.4
+        id: npm-cache # use this to check for `cache-hit` (`steps.npm-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-npm-
+      
+      - name: Install dependencies 👨🏻‍💻
+        run: npm install
+      
+      - name: Rename .env.production to .env file
+        run: mv .env.production .env
+      
+      - name: Test
+        run: npm test
+
+      - name: Build production 📦
+        run: npm run build
+      
+      - name: Create ssh_config
+        run: |
+          set -x
+          echo "Host *" > ssh_config
+          echo "  StrictHostKeyChecking no" >> ssh_config
+          echo "  UserKnownHostsFile=/dev/null" >> ssh_config
+          ls ssh_config
+          cat ssh_config
+
+      - name: copy ssh_config to build directory
+        run: |
+          set -x    
+          cp ssh_config build/
+          
+      - name: Copy files to server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ env.ssh_host }}
+          username: ${{ env.ssh_user }}
+          key: ${{ secrets.my_deploy_key }}
+          source: "build/"
+          target: ${{ env.target_dir }}
