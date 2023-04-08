@@ -111,5 +111,5 @@ jobs:
           host: ${{ env.ssh_host }}
           username: ${{ env.ssh_user }}
           key: ${{ secrets.my_deploy_key }}
-          source: "build"
+          source: "build/."
           target: ${{ env.target_dir }}
