@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  workflow_call:
+    inputs:
+      app:
+        required: true
+        type: string
+      node:
+        required: true
+        type: string
+  push:
+    branches:
+      - develop
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  setup-pnpm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ github.event.inputs.node }}
+      - name: Setup PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: false
+      - name: Get pnpm store directory
+        id: pnpm-cache
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ steps.pnpm-cache.outputs.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+  install-dependencies:
+    name: Install dependencies
+    needs: setup-pnpm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install
+        run: pnpm i --no-frozen-lockfile
+
+  lint:
+    name: Run lint
+    needs: [setup-pnpm, install-dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Lint
+        run: pnpm lint --filter ${{ github.event.inputs.app }}
+
+  testing:
+    name: Run tests
+    needs: [setup-pnpm, install-dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: pnpm test --filter ${{ github.event.inputs.app }}
+
+  building:
+    name: Run build
+    needs: [setup-pnpm, install-dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        run: pnpm build --filter ${{ github.event.inputs.app }}
