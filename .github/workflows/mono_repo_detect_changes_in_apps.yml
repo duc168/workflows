@@ -1,0 +1,47 @@
+name: Trigger CI Flow for Apps
+
+on:
+  workflow_call:
+    inputs:
+      workflow_url:
+        required: true
+        type: string
+      node:
+        required: true
+        type: string
+
+jobs:
+  trigger-workflow:
+    name: Trigger Custom Workflow
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Repository
+        run: |
+          if [ "$GITHUB_REPOSITORY" == "duc168/workflows" ]; then
+            echo "Workflow skipped for repository 'duc168/workflows'"
+            exit 78
+          fi
+
+      - name: Extract Workflow URL
+        id: workflow-url
+        run: |
+          WORKFLOW_URL="${{ github.event.inputs.workflow_url }}"
+          echo "::set-output name=workflow_url::${WORKFLOW_URL}"
+
+      - name: Extract App Names
+        id: app-names
+        run: |
+          CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^apps/' | cut -d/ -f2 | sort -u)
+          echo "::set-output name=app_names::${CHANGED_FOLDERS}"
+
+      - name: Loop Over App Names and Trigger Custom Workflow
+        run: |
+          WORKFLOW_URL="${{ steps.workflow-url.outputs.workflow_url }}"
+          APPS="${{ steps.app-names.outputs.app_names }}"
+          for app in $APPS; do
+            echo "Triggering custom workflow at URL: $WORKFLOW_URL for app: $app"
+            echo "::set-output name=current_app::${app}"
+            echo "Running workflow for app: $app"
+            gh workflow run -R $GITHUB_REPOSITORY -F app=$app -F node=${{ github.event.inputs.node }} --ref $GITHUB_REF "$WORKFLOW_URL"
+          done
+        if: steps.workflow-url.outputs.workflow_url && steps.app-names.outputs.app_names
