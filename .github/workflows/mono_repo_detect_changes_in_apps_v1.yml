@@ -99,8 +99,8 @@ jobs:
           echo "data=$all_paths_string" >> $GITHUB_OUTPUT
 
 
-  run_changed_app:
-    name: Run changed app
+  log_prepared_data:
+    name: Prepared Data
     runs-on: ubuntu-latest
     needs: prepare_data
     steps:
@@ -108,4 +108,14 @@ jobs:
         run: |
           CHANGED_APPS="${{ needs.trigger_workflow.outputs.apps }}"
           echo "Changed apps from prepare_data job: $CHANGED_APPS"
+
+  run_changed_demo_app_ci:
+    name: Run Demo App CI
+    if: contains(needs.trigger_workflow.outputs.apps, "demo")    
+    needs: [prepare_data, log_prepared_data]
+    uses: ${{ inputs.workflow_url}}
+    with:
+      app: "demo"
+      node: 20.10.0
+    
 
