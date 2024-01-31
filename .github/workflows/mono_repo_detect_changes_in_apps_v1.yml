@@ -57,12 +57,19 @@ jobs:
         run: |
           COMMON_ANCESTOR_COMMIT=$(git merge-base --fork-point origin/$BASE_BRANCH)
           echo "Latest Common Ancestor Commit SHA: $COMMON_ANCESTOR_COMMIT"
-          echo "sha=$COMMON_ANCESTOR_COMMIT" >> $GITHUB_OUTPUT     
+          echo "sha=$COMMON_ANCESTOR_COMMIT" >> $GITHUB_OUTPUT  
+          
+      - name: Get Latest Commit
+        id: get_latest_commit
+        run: |
+          LATEST_COMMIT=$(git log -1 --format=%H)
+          echo "Latest commit: $LATEST_COMMIT"
+          echo "sha=$LATEST_COMMIT" >> $GITHUB_OUTPUT  
 
       - name: Extract App Names
         id: app-names
         run: |
-          CHANGED_FOLDERS=$(git diff --name-only ${{ steps.ancestor_commit.outputs.sha }} ${{ github.sha }} | grep '^apps/' | cut -d/ -f2 | sort -u)
+          CHANGED_FOLDERS=$(git diff --name-only ${{ steps.ancestor_commit.outputs.sha }} ${{ steps.get_latest_commit.outputs.sha }} | grep '^apps/' | cut -d/ -f2 | sort -u)
           echo $CHANGED_FOLDERS
           # echo "::set-output name=app_names::${CHANGED_FOLDERS}"
           echo "{app_names}={CHANGED_FOLDERS}" >> $GITHUB_OUTPUT
