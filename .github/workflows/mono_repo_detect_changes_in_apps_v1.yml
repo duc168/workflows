@@ -96,44 +96,14 @@ jobs:
           echo "Changed path string: $all_paths_string"
           echo "data=$all_paths_string" >> $GITHUB_OUTPUT
 
-      # - name: Loop Over App Names and Trigger Custom Workflow
-      #   id: run_workflows
-      #   run: |
-      #     CHANGED_PATHS=$(git diff --name-only ${{ steps.ancestor_commit.outputs.sha }} ${{ steps.get_latest_commit.outputs.sha }})
-      #     echo "Changed paths: $CHANGED_PATHS"
-      #     all_paths=()
-      #     all_paths_string=""
-      #     for path in $CHANGED_PATHS; do
-      #     if [[ $path =~ apps/([^/]+)/.* ]]; then
-      #         x="${BASH_REMATCH[1]}"
-      #         if ! [[ " ${all_paths[@]} " =~ " $x " ]]
-      #         then        
-      #             all_paths+=($x)
-      #             all_paths_string+="$x,"
-      #         fi
-      #     fi
-      #     done
-      #     echo "Changed path string: $all_paths_string"
-      #     WORKFLOW_URL="${{ inputs.workflow_url }}"
-      #     echo $WORKFLOW_URL          
-      #     IFS=',' read -r -a array <<< "$all_paths_string"
-      #     for app in "${array[@]}"; do
-      #       echo "Triggering custom workflow at URL: $WORKFLOW_URL for app: $app"
-      #       echo "Running workflow for app: $app"
-      #       gh workflow run -R $GITHUB_REPOSITORY -F app=$app -F node=${{ github.event.inputs.node }} --ref $GITHUB_REF "$WORKFLOW_URL"
-      #     done
-          
-          
-      - name: Loop Over App Names and Trigger Custom Workflow
+
+  run_flow:
+    name: Run Custom Flow
+    runs-on: ubuntu-latest
+    needs: trigger_workflow
+    steps:
+      - name: Use Changed Paths
         run: |
-          WORKFLOW_URL="${{ inputs.workflow_url }}"
-          APPS="${{ steps.get_changed_paths.outputs.data }}"
-          echo $WORKFLOW_URL
-          echo $APPS
-          IFS=',' read -r -a array <<< "$APPS"
-          for app in "${array[@]}"; do
-            echo "Triggering custom workflow at URL: $WORKFLOW_URL for app: $app"
-            echo "Running workflow for app: $app - new flow"
-            # gh workflow run -R $GITHUB_REPOSITORY -F app=$app -F node=${{ github.event.inputs.node }} --ref $GITHUB_REF "$WORKFLOW_URL"
-          done
-        if: inputs.workflow_url && steps.get_changed_paths.outputs.data
+          CHANGED_PATHS="${{ needs.trigger_workflow.outputs.changed_paths }}"
+          echo "Changed paths from previous step: $CHANGED_PATHS"
+
