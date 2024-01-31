@@ -111,7 +111,7 @@ jobs:
 
   run_changed_demo_app_ci:
     name: Run Demo App CI
-    if: contains(needs.trigger_workflow.outputs.apps, "demo")    
+    if: contains(needs.trigger_workflow.outputs.apps, 'demo')    
     needs: [prepare_data, log_prepared_data]
     uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
     with:
