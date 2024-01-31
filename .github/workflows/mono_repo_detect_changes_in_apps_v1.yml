@@ -21,23 +21,30 @@ jobs:
             echo "Workflow skipped for repository 'duc168/workflows'"
             exit 78
           fi
+          echo "Run custom workflow"
 
       - name: Extract Workflow URL
         id: workflow-url
         run: |
           WORKFLOW_URL="${{ github.event.inputs.workflow_url }}"
-          echo "::set-output name=workflow_url::${WORKFLOW_URL}"
+          echo $WORKFLOW_URL
+          # echo "::set-output name=workflow_url::${WORKFLOW_URL}"
+          echo "{workflow_url}={WORKFLOW_URL}" >> $GITHUB_OUTPUT
 
       - name: Extract App Names
         id: app-names
         run: |
           CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^apps/' | cut -d/ -f2 | sort -u)
-          echo "::set-output name=app_names::${CHANGED_FOLDERS}"
+          echo $CHANGED_FOLDERS
+          # echo "::set-output name=app_names::${CHANGED_FOLDERS}"
+          echo "{app_names}={CHANGED_FOLDERS}" >> $GITHUB_OUTPUT
 
       - name: Loop Over App Names and Trigger Custom Workflow
         run: |
           WORKFLOW_URL="${{ steps.workflow-url.outputs.workflow_url }}"
           APPS="${{ steps.app-names.outputs.app_names }}"
+          echo $WORKFLOW_URL
+          echo $APPS
           for app in $APPS; do
             echo "Triggering custom workflow at URL: $WORKFLOW_URL for app: $app"
             echo "::set-output name=current_app::${app}"
