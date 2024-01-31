@@ -200,6 +200,51 @@ jobs:
             echo "data=false" >> $GITHUB_OUTPUT
           fi
 
+  run_changed_account_app_ci:
+    name: Run Account App CI
+    if: ${{ needs.prepare_env.outputs.account == 'true' }}
+    needs: prepare_env
+    uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
+    with:
+      app: "account"
+      node: ${{ github.event.inputs.node }}
+
+  run_changed_apex_app_ci:
+    name: Run Apex App CI
+    if: ${{ needs.prepare_env.outputs.apex == 'true' }}
+    needs: prepare_env
+    uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
+    with:
+      app: "apex"
+      node: ${{ github.event.inputs.node }}
+  
+  run_changed_chatbox_app_ci:
+    name: Run Chatbox App CI
+    if: ${{ needs.prepare_env.outputs.chatbox == 'true' }}
+    needs: prepare_env
+    uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
+    with:
+      app: "chatbox"
+      node: ${{ github.event.inputs.node }}
+
+  run_changed_chatbot_app_ci:
+    name: Run Chatbot App CI
+    if: ${{ needs.prepare_env.outputs.chatbot == 'true' }}
+    needs: prepare_env
+    uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
+    with:
+      app: "chatbot"
+      node: ${{ github.event.inputs.node }}
+
+  run_changed_crm_app_ci:
+    name: Run CRM App CI
+    if: ${{ needs.prepare_env.outputs.crm == 'true' }}
+    needs: prepare_env
+    uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
+    with:
+      app: "crm"
+      node: ${{ github.event.inputs.node }}
+
   run_changed_demo_app_ci:
     name: Run Demo App CI
     if: ${{ needs.prepare_env.outputs.demo == 'true' }}
@@ -207,6 +252,33 @@ jobs:
     uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
     with:
       app: "demo"
+      node: ${{ github.event.inputs.node }}
+  
+  run_changed_livechat_app_ci:
+    name: Run Livechat App CI
+    if: ${{ needs.prepare_env.outputs.livechat == 'true' }}
+    needs: prepare_env
+    uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
+    with:
+      app: "livechat"
+      node: ${{ github.event.inputs.node }}
+
+  run_changed_management_app_ci:
+    name: Run Management App CI
+    if: ${{ needs.prepare_env.outputs.management == 'true' }}
+    needs: prepare_env
+    uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
+    with:
+      app: "management"
+      node: ${{ github.event.inputs.node }}
+
+  run_changed_widget_engine_app_ci:
+    name: Run Widget Engine App CI
+    if: ${{ needs.prepare_env.outputs.widget-engine-app == 'true' }}
+    needs: prepare_env
+    uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
+    with:
+      app: "widget-engine-app"
       node: ${{ github.event.inputs.node }}
     
 
