@@ -74,6 +74,43 @@ jobs:
           echo "Changed path: $CHANGED_PATH"
           echo "sha=$CHANGED_PATH" >> $GITHUB_OUTPUT  
 
+      - name: Get change paths
+        id: get_changed_paths
+        run: |
+          CHANGED_PATHS=$(git diff --name-only ${{ steps.ancestor_commit.outputs.sha }} ${{ steps.get_latest_commit.outputs.sha }})
+          all_paths=()
+          for path in $CHANGED_PATHS; do
+          if [[ $path =~ apps/([^/]+)/.* ]]; then
+              x="${BASH_REMATCH[1]}"
+              if ! [[ " ${all_paths[@]} " =~ " $x " ]]; then
+              all_paths+=("$x")
+              fi
+          fi
+          echo "Changed paths: ${all_paths[*]}"
+          echo "list=$all_paths" >> $GITHUB_OUTPUT  
+
+      # - name: Extract App Names
+      #   id: app-names
+      #   run: |
+      #     CHANGED_FOLDERS=$(git diff --name-only ${{ steps.ancestor_commit.outputs.sha }} ${{ steps.get_latest_commit.outputs.sha }} | grep '^apps/' | cut -d/ -f2 | sort -u)
+      #     echo $CHANGED_FOLDERS
+      #     # echo "::set-output name=app_names::${CHANGED_FOLDERS}"
+      #     echo "{app_names}={CHANGED_FOLDERS}" >> $GITHUB_OUTPUT
+
+      # - name: Loop Over App Names and Trigger Custom Workflow
+      #   run: |
+      #     WORKFLOW_URL="${{ needs.trigger_workflow.outtputs.workflow_url }}"
+      #     APPS="${{ steps.app-names.outputs.app_names }}"
+      #     echo $WORKFLOW_URL
+      #     echo $APPS
+      #     for app in $APPS; do
+      #       echo "Triggering custom workflow at URL: $WORKFLOW_URL for app: $app"
+      #       echo "::set-output name=current_app::${app}"
+      #       echo "Running workflow for app: $app"
+      #       gh workflow run -R $GITHUB_REPOSITORY -F app=$app -F node=${{ github.event.inputs.node }} --ref $GITHUB_REF "$WORKFLOW_URL"
+      #     done
+      #   if: steps.workflow-url.outputs.workflow_url && steps.app-names.outputs.app_names
+
       - name: Extract App Names
         id: app-names
         run: |
@@ -85,13 +122,13 @@ jobs:
       - name: Loop Over App Names and Trigger Custom Workflow
         run: |
           WORKFLOW_URL="${{ needs.trigger_workflow.outtputs.workflow_url }}"
-          APPS="${{ steps.app-names.outputs.app_names }}"
+          APPS="${{ steps.get_changed_paths.outputs.list }}"
           echo $WORKFLOW_URL
           echo $APPS
-          for app in $APPS; do
+          for app in "${APPS[@]}"; do
             echo "Triggering custom workflow at URL: $WORKFLOW_URL for app: $app"
             echo "::set-output name=current_app::${app}"
             echo "Running workflow for app: $app"
-            gh workflow run -R $GITHUB_REPOSITORY -F app=$app -F node=${{ github.event.inputs.node }} --ref $GITHUB_REF "$WORKFLOW_URL"
+            # gh workflow run -R $GITHUB_REPOSITORY -F app=$app -F node=${{ github.event.inputs.node }} --ref $GITHUB_REF "$WORKFLOW_URL"
           done
-        if: steps.workflow-url.outputs.workflow_url && steps.app-names.outputs.app_names
+        if: steps.workflow_url.outputs.workflow_url && steps.get_changed_paths.outputs.list
