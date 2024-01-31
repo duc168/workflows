@@ -23,6 +23,13 @@ jobs:
             exit 78
           fi
           echo "Run custom workflow"
+          
+      - name: Get Current Branch Name
+        run: |
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          echo "Current Branch Name: $CURRENT_BRANCH"
+          echo "{current_branch}={CURRENT_BRANCH}" >> $GITHUB_OUTPUT
+          
 
       - name: Extract Workflow URL
         id: workflow-url
@@ -37,10 +44,16 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github.event) }}
         run: echo "$GITHUB_CONTEXT"
 
+      - name: Get Latest Common Ancestor Commit
+        run: |
+          COMMON_ANCESTOR_COMMIT=$(git merge-base ${{ github.event.pull_request.base.ref }} ${{ steps.workflow-url.outputs.current_branch }})
+          echo "Latest Common Ancestor Commit SHA: $COMMON_ANCESTOR_COMMIT"
+          echo "{latest_common_ancestor_commit_sha}={COMMON_ANCESTOR_COMMIT}" >> $GITHUB_OUTPUT
+
       - name: Extract App Names
         id: app-names
         run: |
-          CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.pull_request.base.ref }} ${{ github.sha }} | grep '^apps/' | cut -d/ -f2 | sort -u)
+          CHANGED_FOLDERS=$(git diff --name-only ${{ steps.workflow-url.outputs.latest_common_ancestor_commit_sha }} ${{ github.sha }} | grep '^apps/' | cut -d/ -f2 | sort -u)
           echo $CHANGED_FOLDERS
           # echo "::set-output name=app_names::${CHANGED_FOLDERS}"
           echo "{app_names}={CHANGED_FOLDERS}" >> $GITHUB_OUTPUT
