@@ -104,6 +104,6 @@ jobs:
     steps:
       - name: Use Changed Paths
         run: |
-          CHANGED_PATHS="${{ needs.trigger_workflow.outputs.data }}"
+          CHANGED_PATHS="${{ needs.trigger_workflow.outputs.get_changed_paths.data }}"
           echo "Changed paths from previous step: $CHANGED_PATHS"
 
