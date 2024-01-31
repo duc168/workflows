@@ -207,7 +207,7 @@ jobs:
     uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
     with:
       app: "account"
-      node: ${{ github.event.inputs.node }}
+      node: ${{ inputs.node }}
 
   run_changed_apex_app_ci:
     name: Run Apex App CI
@@ -216,7 +216,7 @@ jobs:
     uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
     with:
       app: "apex"
-      node: ${{ github.event.inputs.node }}
+      node: ${{ inputs.node }}
   
   run_changed_chatbox_app_ci:
     name: Run Chatbox App CI
@@ -225,7 +225,7 @@ jobs:
     uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
     with:
       app: "chatbox"
-      node: ${{ github.event.inputs.node }}
+      node: ${{ inputs.node }}
 
   run_changed_chatbot_app_ci:
     name: Run Chatbot App CI
@@ -234,7 +234,7 @@ jobs:
     uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
     with:
       app: "chatbot"
-      node: ${{ github.event.inputs.node }}
+      node: ${{ inputs.node }}
 
   run_changed_crm_app_ci:
     name: Run CRM App CI
@@ -243,7 +243,7 @@ jobs:
     uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
     with:
       app: "crm"
-      node: ${{ github.event.inputs.node }}
+      node: ${{ inputs.node }}
 
   run_changed_demo_app_ci:
     name: Run Demo App CI
@@ -261,7 +261,7 @@ jobs:
     uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
     with:
       app: "livechat"
-      node: ${{ github.event.inputs.node }}
+      node: ${{ inputs.node }}
 
   run_changed_management_app_ci:
     name: Run Management App CI
@@ -270,7 +270,7 @@ jobs:
     uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
     with:
       app: "management"
-      node: ${{ github.event.inputs.node }}
+      node: ${{ inputs.node }}
 
   run_changed_widget_engine_app_ci:
     name: Run Widget Engine App CI
@@ -279,6 +279,6 @@ jobs:
     uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
     with:
       app: "widget-engine-app"
-      node: ${{ github.event.inputs.node }}
+      node: ${{ inputs.node }}
     
 
