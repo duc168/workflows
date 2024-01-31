@@ -92,9 +92,7 @@ jobs:
           all_paths_string=${all_paths_string%?}
           echo "Changed paths: ${all_paths[*]}"
           echo "Changed paths string: ${all_paths_string}"
-          # echo "list=${all_paths_string}" >> $GITHUB_OUTPUT  
-
-
+          
       - name: Loop Over App Names and Trigger Custom Workflow
         run: |
           WORKFLOW_URL="${{ steps.workflow_url.outtputs.workflow_url }}"
