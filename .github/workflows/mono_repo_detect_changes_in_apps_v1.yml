@@ -66,6 +66,13 @@ jobs:
           LATEST_COMMIT="${{ github.event.after }}"
           echo "Latest commit: $LATEST_COMMIT"
           echo "sha=$LATEST_COMMIT" >> $GITHUB_OUTPUT  
+          
+      - name: Get change path
+        id: get_change_path
+        run: |
+          CHANGED_PATH=$(git diff-tree --no-commit-id --name-only -r ${{ github.sha }}
+          echo "Changed path: $CHANGED_PATH"
+          echo "sha=$CHANGED_PATH" >> $GITHUB_OUTPUT  
 
       - name: Extract App Names
         id: app-names
