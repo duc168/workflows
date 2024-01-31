@@ -70,7 +70,7 @@ jobs:
       - name: Get change path
         id: get_change_path
         run: |
-          CHANGED_PATH=$(git diff-tree --no-commit-id --name-only -r ${{ github.event.after }}
+          CHANGED_PATH=$(git diff-tree --no-commit-id --name-only -r ${{ github.event.after }})
           echo "Changed path: $CHANGED_PATH"
           echo "sha=$CHANGED_PATH" >> $GITHUB_OUTPUT  
 
