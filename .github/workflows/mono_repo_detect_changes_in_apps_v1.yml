@@ -99,20 +99,30 @@ jobs:
           echo "data=$all_paths_string" >> $GITHUB_OUTPUT
 
 
-  log_prepared_data:
-    name: Prepared Data
+  prepare_env:
+    name: Prepare Env
     runs-on: ubuntu-latest
     needs: prepare_data
+    outputs:
+      demo: ${{ steps.get_demo.outputs.data }}
     steps:
       - name: Log change apps
         run: |
           CHANGED_APPS="${{ needs.trigger_workflow.outputs.apps }}"
           echo "Changed apps from prepare_data job: $CHANGED_APPS"
+      - name: Check for demo app change
+        id: get_demo
+        run: |
+          if [[ $CHANGED_APPS == *"demo"* ]]; then
+            echo "data=true" >> $GITHUB_OUTPUT
+          else
+            echo "data=false" >> $GITHUB_OUTPUT
+          fi
 
   run_changed_demo_app_ci:
     name: Run Demo App CI
-    if: contains(needs.trigger_workflow.outputs.apps, 'demo')    
-    needs: [prepare_data, log_prepared_data]
+    if: ${{ needs.prepare_env.outputs.demo == 'true' }}
+    needs: prepare_env
     uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
     with:
       app: "demo"
