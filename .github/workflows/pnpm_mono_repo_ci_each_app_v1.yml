@@ -58,7 +58,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Install
-        run: pnpm i --no-frozen-lockfile
+        run: npx pnpm i --no-frozen-lockfile
 
   lint:
     name: Run lint
@@ -66,7 +66,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Lint
-        run: pnpm lint --filter ${{ github.event.inputs.app }}
+        run: npx pnpm lint --filter ${{ github.event.inputs.app }}
 
   testing:
     name: Run tests
@@ -74,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Test
-        run: pnpm test --filter ${{ github.event.inputs.app }}
+        run: npx pnpm test --filter ${{ github.event.inputs.app }}
 
   building:
     name: Run build
@@ -82,4 +82,4 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Build
-        run: pnpm build --filter ${{ github.event.inputs.app }}
+        run: npx pnpm build --filter ${{ github.event.inputs.app }}
