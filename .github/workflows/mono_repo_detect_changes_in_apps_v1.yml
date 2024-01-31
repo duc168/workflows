@@ -116,9 +116,8 @@ jobs:
           IFS=',' read -r -a array <<< "$all_paths_string"
           for app in "${array[@]}"; do
             echo "Triggering custom workflow at URL: $WORKFLOW_URL for app: $app"
-            echo "::set-output name=current_app::${app}"
             echo "Running workflow for app: $app"
-            # gh workflow run -R $GITHUB_REPOSITORY -F app=$app -F node=${{ github.event.inputs.node }} --ref $GITHUB_REF "$WORKFLOW_URL"
+            gh workflow run -R $GITHUB_REPOSITORY -F app=$app -F node=${{ github.event.inputs.node }} --ref $GITHUB_REF "$WORKFLOW_URL"
           done
           
           
@@ -135,4 +134,4 @@ jobs:
             echo "Running workflow for app: $app"
             # gh workflow run -R $GITHUB_REPOSITORY -F app=$app -F node=${{ github.event.inputs.node }} --ref $GITHUB_REF "$WORKFLOW_URL"
           done
-        if: steps.workflow_url.outputs.workflow_url && steps.get_changed_paths.outputs.list
+        if: steps.workflow_url.outputs.workflow_url && steps.get_changed_paths.outputs.data
