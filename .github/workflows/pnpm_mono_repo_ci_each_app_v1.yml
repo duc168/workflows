@@ -94,8 +94,6 @@ jobs:
           pnpm i --no-frozen-lockfile
       - name: Test
         run: pnpm test --filter ${{ github.event.inputs.app }}
-      - name: Build
-        run: pnpm build --filter ${{ github.event.inputs.app }}   
   
   build:
     runs-on: ubuntu-latest
