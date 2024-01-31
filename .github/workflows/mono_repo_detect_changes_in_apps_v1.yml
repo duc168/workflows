@@ -11,8 +11,8 @@ on:
         type: string
 
 jobs:
-  trigger_workflow:
-    name: Trigger Custom Workflow
+  prepare_data:
+    name: Prepare data for Workflow
     runs-on: ubuntu-latest
     outputs:
       apps: ${{ steps.get_changed_paths.outputs.data }}
@@ -99,13 +99,13 @@ jobs:
           echo "data=$all_paths_string" >> $GITHUB_OUTPUT
 
 
-  run_flow:
-    name: Run Custom Flow
+  run_changed_app:
+    name: Run changed app
     runs-on: ubuntu-latest
-    needs: trigger_workflow
+    needs: prepare_data
     steps:
-      - name: Use Changed Paths
+      - name: Log change apps
         run: |
-          CHANGED_PATHS="${{ needs.trigger_workflow.outputs.apps }}"
-          echo "Changed paths from previous step: $CHANGED_PATHS"
+          CHANGED_APPS="${{ needs.trigger_workflow.outputs.apps }}"
+          echo "Changed apps from prepare_data job: $CHANGED_APPS"
 
