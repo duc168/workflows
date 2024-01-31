@@ -9,16 +9,7 @@ on:
 
 jobs:
   ci:
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node: ${{ github.event.inputs.node }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Trigger CI Flow for Apps
-        uses: duc168/workflows/.github/workflows/mono_repo_detect_changes_in_apps_v1.yml@master
-        with:
-          workflow_url: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
-          node: ${{ matrix.node }}
+    uses: duc168/workflows/.github/workflows/mono_repo_detect_changes_in_apps_v1.yml@master
+    with:
+      workflow_url: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
+      node: ${{ matrix.node }}
