@@ -92,12 +92,13 @@ jobs:
           fi
           done
           echo "Changed path string: $all_paths_string"
+          echo "data=$all_paths_string" >> $GITHUB_OUTPUT
           
           
       - name: Loop Over App Names and Trigger Custom Workflow
         run: |
           WORKFLOW_URL="${{ steps.workflow_url.outtputs.workflow_url }}"
-          APPS="${{ steps.get_changed_paths.outputs.list }}"
+          APPS="${{ steps.get_changed_paths.outputs.data }}"
           echo $WORKFLOW_URL
           echo $APPS
           IFS=',' read -r -a array <<< "$APPS"
