@@ -27,7 +27,7 @@ jobs:
       - name: Extract Workflow URL
         id: workflow-url
         run: |
-          WORKFLOW_URL="${{ github.event.inputs.workflow_url }}"
+          WORKFLOW_URL="${{ inputs.workflow_url }}"
           echo $WORKFLOW_URL
           # echo "::set-output name=workflow_url::${WORKFLOW_URL}"
           echo "{workflow_url}={WORKFLOW_URL}" >> $GITHUB_OUTPUT
@@ -35,7 +35,7 @@ jobs:
       - name: Extract App Names
         id: app-names
         run: |
-          CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep '^apps/' | cut -d/ -f2 | sort -u)
+          CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.base_ref }} ${{ github.sha }} | grep '^apps/' | cut -d/ -f2 | sort -u)
           echo $CHANGED_FOLDERS
           # echo "::set-output name=app_names::${CHANGED_FOLDERS}"
           echo "{app_names}={CHANGED_FOLDERS}" >> $GITHUB_OUTPUT
