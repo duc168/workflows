@@ -62,7 +62,8 @@ jobs:
       - name: Get Latest Commit
         id: get_latest_commit
         run: |
-          LATEST_COMMIT=$(git log -1 --format=%H)
+          # LATEST_COMMIT=$(git log -1 --format=%H)
+          LATEST_COMMIT="${{ github.event.after }}"
           echo "Latest commit: $LATEST_COMMIT"
           echo "sha=$LATEST_COMMIT" >> $GITHUB_OUTPUT  
 
