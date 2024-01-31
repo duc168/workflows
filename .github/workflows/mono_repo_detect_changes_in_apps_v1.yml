@@ -113,6 +113,7 @@ jobs:
       - name: Check for demo app change
         id: get_demo
         run: |
+          CHANGED_APPS="${{ needs.prepare_data.outputs.apps }}"
           if [[ $CHANGED_APPS == *"demo"* ]]; then
             echo "data=true" >> $GITHUB_OUTPUT
           else
