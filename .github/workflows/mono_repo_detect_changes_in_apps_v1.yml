@@ -93,6 +93,33 @@ jobs:
           done
           echo "Changed path string: $all_paths_string"
           echo "data=$all_paths_string" >> $GITHUB_OUTPUT
+
+      - name: Loop Over App Names and Trigger Custom Workflow
+        id: run_workflows
+        run: |
+          CHANGED_PATHS=$(git diff --name-only ${{ steps.ancestor_commit.outputs.sha }} ${{ steps.get_latest_commit.outputs.sha }})
+          echo "Changed paths: $CHANGED_PATHS"
+          all_paths=()
+          all_paths_string=""
+          for path in $CHANGED_PATHS; do
+          if [[ $path =~ apps/([^/]+)/.* ]]; then
+              x="${BASH_REMATCH[1]}"
+              if ! [[ " ${all_paths[@]} " =~ " $x " ]]
+              then        
+                  all_paths+=($x)
+                  all_paths_string+="$x,"
+              fi
+          fi
+          done
+          echo "Changed path string: $all_paths_string"
+          WORKFLOW_URL="${{ steps.workflow_url.outtputs.workflow_url }}"
+          IFS=',' read -r -a array <<< "$all_paths_string"
+          for app in "${array[@]}"; do
+            echo "Triggering custom workflow at URL: $WORKFLOW_URL for app: $app"
+            echo "::set-output name=current_app::${app}"
+            echo "Running workflow for app: $app"
+            # gh workflow run -R $GITHUB_REPOSITORY -F app=$app -F node=${{ github.event.inputs.node }} --ref $GITHUB_REF "$WORKFLOW_URL"
+          done
           
           
       - name: Loop Over App Names and Trigger Custom Workflow
