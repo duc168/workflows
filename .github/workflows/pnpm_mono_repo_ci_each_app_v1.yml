@@ -9,12 +9,6 @@ on:
       node:
         required: true
         type: string
-  push:
-    branches:
-      - develop
-      - main
-  pull_request:
-    types: [opened, synchronize, reopened]
 
 jobs:
   check-repo:
