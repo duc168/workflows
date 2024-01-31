@@ -252,7 +252,7 @@ jobs:
     uses: duc168/workflows/.github/workflows/pnpm_mono_repo_ci_each_app_v1.yml@master
     with:
       app: "demo"
-      node: ${{ github.event.inputs.node }}
+      node: ${{ inputs.node }}
   
   run_changed_livechat_app_ci:
     name: Run Livechat App CI
