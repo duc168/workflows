@@ -11,7 +11,7 @@ on:
         type: string
 
 jobs:
-  trigger-workflow:
+  trigger_workflow:
     name: Trigger Custom Workflow
     runs-on: ubuntu-latest
     steps:
@@ -38,12 +38,12 @@ jobs:
           
 
       - name: Extract Workflow URL
-        id: workflow-url
+        id: workflow_url
         run: |
           WORKFLOW_URL="${{ inputs.workflow_url }}"
           echo $WORKFLOW_URL
           # echo "::set-output name=workflow_url::${WORKFLOW_URL}"
-          echo "{workflow_url}={WORKFLOW_URL}" >> $GITHUB_OUTPUT
+          echo "workflow_url=$WORKFLOW_URL" >> $GITHUB_OUTPUT
           
       - name: Dump GitHub context
         env:
@@ -57,7 +57,7 @@ jobs:
         run: |
           COMMON_ANCESTOR_COMMIT=$(git merge-base --fork-point origin/$BASE_BRANCH)
           echo "Latest Common Ancestor Commit SHA: $COMMON_ANCESTOR_COMMIT"
-          echo "{sha}={COMMON_ANCESTOR_COMMIT}" >> $GITHUB_OUTPUT     
+          echo "sha=$COMMON_ANCESTOR_COMMIT" >> $GITHUB_OUTPUT     
 
       - name: Extract App Names
         id: app-names
@@ -69,7 +69,7 @@ jobs:
 
       - name: Loop Over App Names and Trigger Custom Workflow
         run: |
-          WORKFLOW_URL="${{ steps.workflow-url.outputs.workflow_url }}"
+          WORKFLOW_URL="${{ needs.trigger_workflow.outtputs.workflow_url }}"
           APPS="${{ steps.app-names.outputs.app_names }}"
           echo $WORKFLOW_URL
           echo $APPS
