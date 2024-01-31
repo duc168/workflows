@@ -14,6 +14,8 @@ jobs:
   trigger_workflow:
     name: Trigger Custom Workflow
     runs-on: ubuntu-latest
+    outputs:
+      apps: ${{ steps.get_changed_paths.outputs.data }}
     env:
       GH_TOKEN: ${{ github.token }}
     steps:
@@ -104,6 +106,6 @@ jobs:
     steps:
       - name: Use Changed Paths
         run: |
-          CHANGED_PATHS="${{ needs.trigger_workflow.outputs.get_changed_paths.data }}"
+          CHANGED_PATHS="${{ needs.trigger_workflow.outputs.apps }}"
           echo "Changed paths from previous step: $CHANGED_PATHS"
 
