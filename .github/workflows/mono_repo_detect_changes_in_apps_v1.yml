@@ -51,7 +51,7 @@ jobs:
 
       - name: Get Latest Common Ancestor Commit
         run: |
-          COMMON_ANCESTOR_COMMIT=$(git merge-base ${{ github.event.pull_request.base.ref }} ${{ github.event.pull_request.head.ref }})
+          COMMON_ANCESTOR_COMMIT=$(git merge-base origin/${{ github.event.pull_request.base.ref }} ${{ github.event.pull_request.head.ref }})
           echo "Latest Common Ancestor Commit SHA: $COMMON_ANCESTOR_COMMIT"
           echo "{latest_common_ancestor_commit_sha}={COMMON_ANCESTOR_COMMIT}" >> $GITHUB_OUTPUT
 
