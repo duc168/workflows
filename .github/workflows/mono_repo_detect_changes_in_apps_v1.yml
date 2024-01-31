@@ -78,19 +78,7 @@ jobs:
         id: get_changed_paths
         run: |
           CHANGED_PATHS=$(git diff --name-only ${{ steps.ancestor_commit.outputs.sha }} ${{ steps.get_latest_commit.outputs.sha }})
-          all_paths=()
-          all_paths_string=""
-          for path in $CHANGED_PATHS; do
-          if [[ $path =~ apps/([^/]+)/.* ]]; then
-              x="${BASH_REMATCH[1]}"
-              if ! [[ " ${all_paths[@]} " =~ " $x " ]]; then
-              all_paths+=("$x")
-              all_paths_string+="$x,"
-              fi
-          fi
-          # the comma at the end of the string is removed for the last path
-          all_paths_string=${all_paths_string%?}
-          echo "Changed paths: ${all_paths[*]}"
+          echo "Changed paths: $CHANGED_PATHS"
           
           
       - name: Loop Over App Names and Trigger Custom Workflow
