@@ -35,7 +35,7 @@ jobs:
       - name: Extract App Names
         id: app-names
         run: |
-          CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.base_ref }} ${{ github.sha }} | grep '^apps/' | cut -d/ -f2 | sort -u)
+          CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.pull_request.base.ref }} ${{ github.sha }} | grep '^apps/' | cut -d/ -f2 | sort -u)
           echo $CHANGED_FOLDERS
           # echo "::set-output name=app_names::${CHANGED_FOLDERS}"
           echo "{app_names}={CHANGED_FOLDERS}" >> $GITHUB_OUTPUT
