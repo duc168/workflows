@@ -115,6 +115,7 @@ jobs:
           done
           echo "Changed path string: $all_paths_string"
           WORKFLOW_URL="${{ steps.workflow_url.outtputs.workflow_url }}"
+          echo $WORKFLOW_URL          
           IFS=',' read -r -a array <<< "$all_paths_string"
           for app in "${array[@]}"; do
             echo "Triggering custom workflow at URL: $WORKFLOW_URL for app: $app"
