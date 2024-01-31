@@ -91,7 +91,7 @@ jobs:
           # the comma at the end of the string is removed for the last path
           all_paths_string=${all_paths_string%?}
           echo "Changed paths: ${all_paths[*]}"
-          echo "Changed paths string: ${all_paths_string}"
+          
           
       - name: Loop Over App Names and Trigger Custom Workflow
         run: |
