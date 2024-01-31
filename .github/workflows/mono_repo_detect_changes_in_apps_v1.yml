@@ -17,6 +17,7 @@ jobs:
     steps:
       - name: Check Repository
         run: |
+          echo $GITHUB_REPOSITORY
           if [ "$GITHUB_REPOSITORY" == "duc168/workflows" ]; then
             echo "Workflow skipped for repository 'duc168/workflows'"
             exit 78
